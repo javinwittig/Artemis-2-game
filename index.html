@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artemis II: Rocket Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <main id="game">
+    <div id="canvas-container"></div>
+    <div id="loading" aria-live="polite">Loading rocket model...</div>
+
+    <!-- ==================== IN-GAME HUD ==================== -->
+    <div id="game-hud" class="hidden">
+      <div id="score-display">SCORE <span id="score-value">0</span></div>
+      <button id="back-button" class="hud-button">&larr; BACK</button>
+    </div>
+    <div id="countdown-display" class="hidden"></div>
+
+    <!-- ==================== MENU ==================== -->
+    <div id="menu-overlay">
+      <div id="menu-content">
+        <h1 class="menu-title">ARTEMIS II</h1>
+        <h2 class="menu-subtitle">ROCKET GAME</h2>
+        <p class="menu-desc">
+          Pilot the Artemis II SLS upward through an asteroid field. Steer left
+          and right to dodge the rocks &mdash; you score every second you survive
+          and every asteroid you dodge. One hit ends the flight.
+        </p>
+        <button id="play-button" class="menu-button">PLAY GAME</button>
+        <div id="menu-controls">
+          <div class="controls-col">
+            <h3>CONTROLS</h3>
+            <p><b>&larr; / &rarr;</b> or <b>A / D</b> &mdash; steer the rocket</p>
+            <p><b>Esc</b> &mdash; back to the 3D view</p>
+          </div>
+        </div>
+        <p class="menu-note">Built around my own Blender model of the Artemis II SLS rocket.</p>
+      </div>
+    </div>
+
+    <!-- ==================== GAME OVER ==================== -->
+    <div id="gameover-overlay" class="hidden">
+      <div id="gameover-content">
+        <h1 class="gameover-title">GAME OVER</h1>
+        <div id="gameover-score">0 PTS</div>
+        <div id="gameover-best">BEST 0 PTS</div>
+        <button id="restart-button" class="menu-button">RESTART</button>
+        <button id="gameover-back-button" class="menu-button secondary">BACK TO MENU</button>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

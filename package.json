@@ -1,0 +1,11 @@
+{
+  "name": "nasa-rakete-web",
+  "version": "2.0.0",
+  "description": "Artemis II rocket showcase + asteroid dodging game (three.js, no build step)",
+  "main": "inspect_model.js",
+  "keywords": [],
+  "type": "commonjs",
+  "dependencies": {
+    "playwright": "^1.64.0"
+  }
+}
