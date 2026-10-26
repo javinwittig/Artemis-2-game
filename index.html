@@ -1,68 +1,75 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Artemis II: Rocket Game</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-      }
-    }
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#03050b" />
+  <title>Artemis II – Launch &amp; Dodge</title>
 </head>
 <body>
-  <main id="game">
-    <div id="canvas-container"></div>
-    <div id="loading" aria-live="polite">Loading rocket model...</div>
+  <div id="app">
+    <div id="stage"></div>
 
-    <!-- ==================== IN-GAME HUD ==================== -->
-    <div id="game-hud" class="hidden">
-      <div id="score-display">SCORE <span id="score-value">0</span></div>
-      <button id="back-button" class="hud-button">&larr; BACK</button>
+    <div id="loading" class="screen">
+      <div class="loading-box">
+        <div class="loading-title">ARTEMIS II</div>
+        <div class="loading-bar"><div id="loading-fill"></div></div>
+        <div id="loading-text">Modell wird geladen … 0 %</div>
+      </div>
     </div>
-    <div id="countdown-display" class="hidden"></div>
 
-    <!-- ==================== MENU ==================== -->
-    <div id="menu-overlay">
-      <div id="menu-content">
-        <h1 class="menu-title">ARTEMIS II</h1>
-        <h2 class="menu-subtitle">ROCKET GAME</h2>
-        <p class="menu-desc">
-          Pilot the Artemis II SLS upward through an asteroid field. Steer left
-          and right to dodge the rocks &mdash; you score every second you survive
-          and every asteroid you dodge. One hit ends the flight.
-        </p>
-        <button id="play-button" class="menu-button">PLAY GAME</button>
-        <div id="menu-controls">
-          <div class="controls-col">
-            <h3>CONTROLS</h3>
-            <p><b>&larr; / &rarr;</b> or <b>A / D</b> &mdash; steer the rocket</p>
-            <p><b>Esc</b> &mdash; back to the 3D view</p>
-          </div>
+    <div id="title" class="screen hidden">
+      <div class="title-box">
+        <p class="kicker">SLS · Orion · Mondmission</p>
+        <h1>Artemis II</h1>
+        <button id="btn-start" class="btn primary">Start</button>
+        <p class="hint only-desktop">Steuern mit WASD oder Pfeiltasten · Start mit Leertaste</p>
+        <p class="hint only-touch">Zum Steuern auf dem Bildschirm ziehen</p>
+        <p id="title-best" class="best"></p>
+      </div>
+    </div>
+
+    <div id="countdown" class="hidden">
+      <span class="countdown-label">T –</span>
+      <span id="countdown-value">10</span>
+    </div>
+    <div id="callout" class="hidden"></div>
+    <button id="btn-skip" class="btn ghost small hidden">Überspringen ⏩</button>
+
+    <div id="hud">
+      <div class="hud-panel hud-left">
+        <div class="hud-label">Distanz</div>
+        <div class="hud-value"><span id="hud-score">0</span><small> km</small></div>
+        <div class="hud-sub">Rekord <span id="hud-best">0</span> km</div>
+      </div>
+      <div class="hud-panel hud-right">
+        <div class="hud-label">Geschwindigkeit</div>
+        <div class="hud-value"><span id="hud-speed">0,0</span><small> km/s</small></div>
+      </div>
+      <div id="shield" class="hud-panel">
+        <div class="shield-label">Schild <span id="shield-time">5,0</span> s</div>
+        <div class="shield-bar"><div id="shield-fill"></div></div>
+      </div>
+    </div>
+
+    <div id="joystick" class="hidden"><div id="joystick-knob"></div></div>
+
+    <div id="gameover" class="screen hidden">
+      <div class="gameover-box">
+        <h2>Game Over</h2>
+        <div class="go-score"><span id="go-score">0</span> km</div>
+        <div id="go-record" class="record hidden">Neuer Rekord!</div>
+        <div id="go-best" class="best"></div>
+        <div class="go-buttons">
+          <button id="btn-retry" class="btn primary">Nochmal</button>
+          <button id="btn-home" class="btn ghost">Zurück zum Start</button>
         </div>
-        <p class="menu-note">Built around my own Blender model of the Artemis II SLS rocket.</p>
       </div>
     </div>
 
-    <!-- ==================== GAME OVER ==================== -->
-    <div id="gameover-overlay" class="hidden">
-      <div id="gameover-content">
-        <h1 class="gameover-title">GAME OVER</h1>
-        <div id="gameover-score">0 PTS</div>
-        <div id="gameover-best">BEST 0 PTS</div>
-        <button id="restart-button" class="menu-button">RESTART</button>
-        <button id="gameover-back-button" class="menu-button secondary">BACK TO MENU</button>
-      </div>
-    </div>
-  </main>
-
-  <script type="module" src="js/main.js"></script>
+    <button id="btn-mute" class="icon-btn" aria-label="Ton an/aus" title="Ton an/aus (M)">🔊</button>
+    <div id="flash"></div>
+  </div>
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>
