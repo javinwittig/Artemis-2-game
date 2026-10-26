@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
-const fmtInt = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
-const fmt1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const fmtInt = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+const fmt1 = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 export class Hud {
   constructor() {
@@ -23,7 +23,7 @@ export class Hud {
   setLoading(p) {
     const pct = Math.round(p * 100);
     this.el.loadingFill.style.width = `${pct}%`;
-    this.el.loadingText.textContent = `Modell wird geladen … ${pct} %`;
+    this.el.loadingText.textContent = `Loading model… ${pct}%`;
   }
 
   setLoadingText(text) {
@@ -37,7 +37,7 @@ export class Hud {
   showTitle(bestKm) {
     this.titleHideT = 0;
     this.el.title.classList.remove('hidden', 'leaving');
-    this.el.titleBest.textContent = bestKm > 0 ? `Rekord: ${fmtInt.format(bestKm)} km` : '';
+    this.el.titleBest.textContent = bestKm > 0 ? `Best: ${fmtInt.format(bestKm)} km` : '';
   }
 
   hideTitle() {
@@ -96,7 +96,7 @@ export class Hud {
 
   showGameOver(km, bestKm, record) {
     this.el.goScore.textContent = fmtInt.format(km);
-    this.el.goBest.textContent = `Rekord: ${fmtInt.format(bestKm)} km`;
+    this.el.goBest.textContent = `Best: ${fmtInt.format(bestKm)} km`;
     this.el.goRecord.classList.toggle('hidden', !record);
     this.el.gameover.classList.remove('hidden');
   }
@@ -110,7 +110,8 @@ export class Hud {
   }
 
   setMuted(m) {
-    this.el.mute.textContent = m ? '🔇' : '🔊';
+    this.el.mute.textContent = m ? 'Sound off' : 'Sound on';
+    this.el.mute.setAttribute('aria-pressed', String(!m));
   }
 
   update(dt) {

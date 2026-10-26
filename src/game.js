@@ -255,7 +255,7 @@ export class Game {
     const { sound, hud } = this.ctx;
     this.shieldT = CONFIG.powerups.shieldTime;
     sound.powerup();
-    hud.callout('Schild aktiv!', 1.4);
+    hud.callout('Shield active', 1.4);
     hud.flash(0.15);
   }
 

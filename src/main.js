@@ -1,4 +1,3 @@
-import './style.css';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -104,7 +103,7 @@ async function init() {
   const rocket = await loadRocketModel((p) => hud.setLoading(p));
   ctx.rocket = rocket;
   hud.setLoading(1);
-  hud.setLoadingText('Szene wird vorbereitet …');
+  hud.setLoadingText('Preparing scene…');
   scene.add(rocket.rig);
   env.attachLaunchSite(rocket.pad, rocket.padPivot);
   setupSun(rocket.padPivot);
@@ -175,7 +174,7 @@ function beginGame() {
   ctx.rocket.pad.visible = false;
   game.begin(ctx.rocket.rig.position);
   state = 'game';
-  hud.callout(IS_MOBILE ? 'Ziehen zum Ausweichen' : 'Ausweichen mit WASD / Pfeiltasten', 3);
+  hud.callout(IS_MOBILE ? 'Drag to steer' : 'Steer with WASD / arrow keys', 3);
 }
 
 function showGameOver(km, best, record) {
@@ -380,5 +379,5 @@ if (TEST) {
 
 init().catch((err) => {
   console.error(err);
-  hud.setLoadingText(`Fehler beim Laden: ${err.message}`);
+  hud.setLoadingText(`Failed to load: ${err.message}`);
 });

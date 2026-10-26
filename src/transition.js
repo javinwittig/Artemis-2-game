@@ -82,7 +82,7 @@ export class Transition {
       rocket.separateBoosters(this.velocity, scene);
       exhaust.cutoff('srb', 0.35);
       exhaust.separationPuffs();
-      hud.callout('Booster-Trennung');
+      hud.callout('Booster separation');
       fx.impulse = Math.max(fx.impulse, 0.5);
       this.ctx.sound.asteroidHit();
     }

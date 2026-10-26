@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import modelUrl from '../assets/Nasa_Rakete_small.glb?url';
 import { CONFIG } from './config.js';
+
+// Works both with Vite (asset gets hashed into dist/) and with a plain static server.
+const modelUrl = new URL('../assets/Nasa_Rakete_small.glb', import.meta.url).href;
 
 const _a = new THREE.Vector3();
 const _b = new THREE.Vector3();
@@ -30,7 +32,7 @@ export function loadRocketModel(onProgress) {
 
 function requireMesh(root, name) {
   const mesh = root.getObjectByName(name);
-  if (!mesh || !mesh.isMesh) throw new Error(`Mesh "${name}" fehlt im Modell`);
+  if (!mesh || !mesh.isMesh) throw new Error(`Mesh "${name}" not found in the model`);
   return mesh;
 }
 
@@ -104,7 +106,7 @@ export class Rocket {
     });
     const nozzleKeys = ['A', 'B', 'c00', 'c01', 'c10', 'c11'];
     for (const k of nozzleKeys) {
-      if (!hostParts.has(k)) throw new Error(`Düse "${k}" nicht im Modell gefunden`);
+      if (!hostParts.has(k)) throw new Error(`Nozzle "${k}" not found in the model`);
     }
 
     const nozzleBoxes = {};

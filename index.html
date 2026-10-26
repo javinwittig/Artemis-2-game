@@ -1,10 +1,22 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-  <meta name="theme-color" content="#03050b" />
+  <meta name="theme-color" content="#05070c" />
   <title>Artemis II – Launch &amp; Dodge</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2305070c'/%3E%3Cpath d='M16 4c2.5 3 3.5 7 3.5 11v9h-7v-9c0-4 1-8 3.5-11z' fill='%23f2f2f2'/%3E%3Cpath d='M12.5 24h7l-1 4h-5z' fill='%23e8742c'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./src/style.css" />
+  <!-- Lets the source run on a plain static server (e.g. VS Code Live Server) after `npm install`.
+       Vite ignores this and bundles three.js itself. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./node_modules/three/build/three.module.js",
+        "three/addons/": "./node_modules/three/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
   <div id="app">
@@ -12,42 +24,42 @@
 
     <div id="loading" class="screen">
       <div class="loading-box">
-        <div class="loading-title">ARTEMIS II</div>
+        <div class="loading-title">Artemis II</div>
         <div class="loading-bar"><div id="loading-fill"></div></div>
-        <div id="loading-text">Modell wird geladen … 0 %</div>
+        <div id="loading-text">Loading model… 0%</div>
       </div>
     </div>
 
     <div id="title" class="screen hidden">
       <div class="title-box">
-        <p class="kicker">SLS · Orion · Mondmission</p>
+        <p class="kicker">SLS / Orion</p>
         <h1>Artemis II</h1>
         <button id="btn-start" class="btn primary">Start</button>
-        <p class="hint only-desktop">Steuern mit WASD oder Pfeiltasten · Start mit Leertaste</p>
-        <p class="hint only-touch">Zum Steuern auf dem Bildschirm ziehen</p>
+        <p class="hint only-desktop">Steer with WASD or the arrow keys. Press Space to start.</p>
+        <p class="hint only-touch">Drag anywhere on the screen to steer.</p>
         <p id="title-best" class="best"></p>
       </div>
     </div>
 
     <div id="countdown" class="hidden">
-      <span class="countdown-label">T –</span>
+      <span class="countdown-label">T–</span>
       <span id="countdown-value">10</span>
     </div>
     <div id="callout" class="hidden"></div>
-    <button id="btn-skip" class="btn ghost small hidden">Überspringen ⏩</button>
+    <button id="btn-skip" class="btn ghost small hidden">Skip</button>
 
     <div id="hud">
       <div class="hud-panel hud-left">
-        <div class="hud-label">Distanz</div>
+        <div class="hud-label">Distance</div>
         <div class="hud-value"><span id="hud-score">0</span><small> km</small></div>
-        <div class="hud-sub">Rekord <span id="hud-best">0</span> km</div>
+        <div class="hud-sub">Best <span id="hud-best">0</span> km</div>
       </div>
       <div class="hud-panel hud-right">
-        <div class="hud-label">Geschwindigkeit</div>
-        <div class="hud-value"><span id="hud-speed">0,0</span><small> km/s</small></div>
+        <div class="hud-label">Speed</div>
+        <div class="hud-value"><span id="hud-speed">0.0</span><small> km/s</small></div>
       </div>
       <div id="shield" class="hud-panel">
-        <div class="shield-label">Schild <span id="shield-time">5,0</span> s</div>
+        <div class="shield-label">Shield <span id="shield-time">5.0</span> s</div>
         <div class="shield-bar"><div id="shield-fill"></div></div>
       </div>
     </div>
@@ -56,18 +68,18 @@
 
     <div id="gameover" class="screen hidden">
       <div class="gameover-box">
-        <h2>Game Over</h2>
+        <h2>Game over</h2>
         <div class="go-score"><span id="go-score">0</span> km</div>
-        <div id="go-record" class="record hidden">Neuer Rekord!</div>
+        <div id="go-record" class="record hidden">New best</div>
         <div id="go-best" class="best"></div>
         <div class="go-buttons">
-          <button id="btn-retry" class="btn primary">Nochmal</button>
-          <button id="btn-home" class="btn ghost">Zurück zum Start</button>
+          <button id="btn-retry" class="btn primary">Try again</button>
+          <button id="btn-home" class="btn ghost">Back to start</button>
         </div>
       </div>
     </div>
 
-    <button id="btn-mute" class="icon-btn" aria-label="Ton an/aus" title="Ton an/aus (M)">🔊</button>
+    <button id="btn-mute" class="text-btn" aria-label="Toggle sound" title="Toggle sound (M)">Sound on</button>
     <div id="flash"></div>
   </div>
   <script type="module" src="./src/main.js"></script>

@@ -86,12 +86,12 @@ export class Launch {
       this.flags.rs25 = true;
       exhaust.ignite('rs25', 1.6);
       exhaust.steamBurst();
-      hud.callout('Haupttriebwerke gezündet');
+      hud.callout('Main engine start');
     }
     if (T >= 0 && !this.flags.srb) {
       this.flags.srb = true;
       exhaust.ignite('srb', 0.25);
-      hud.callout('Liftoff!');
+      hud.callout('Liftoff');
       hud.flash(0.35);
     }
 
@@ -106,7 +106,7 @@ export class Launch {
     rocket.attitude.quaternion.setFromAxisAngle(UP, roll);
     if (ta > L.roll[0] && !this.flags.roll) {
       this.flags.roll = true;
-      hud.callout('Roll- und Nickmanöver');
+      hud.callout('Roll program');
     }
 
     exhaust.velocity.copy(this.velocity);

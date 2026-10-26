@@ -1,60 +1,66 @@
 # Artemis II — Launch & Dodge
 
-Ein 3D-Browser-Raketenspiel mit Three.js und Vite: cineastischer Start der Artemis-II-Rakete (SLS + Orion) von der eigenen Startrampe, fließender Übergang ins All und ein Asteroiden-Ausweichspiel in der Third-Person-Ansicht.
+A 3D browser game built with Three.js and Vite: launch the Artemis II rocket (SLS + Orion) from its pad, follow it into space without a cut, then dodge asteroids in a third-person view.
 
-## Ablauf
+Play it at https://javinwittig.github.io/Artemis-2-game/
 
-1. **Startbildschirm**: „ARTEMIS II“, die Kamera kreist langsam um die Rakete. Auf **Start** klicken (oder `Leertaste` / `Enter`).
-2. **Countdown 10 → 0**: Die Kamera fährt etwa eine halbe Runde um die Rakete in die tiefe Startperspektive und hält dabei an einer Stelle, an der kein Turm die Sicht verdeckt. Bei T-3,5 zünden die Haupttriebwerke (Dampf, wachsende Flamme), bei T-0 die Booster. Mit **Überspringen** läuft der Start sechsmal so schnell.
-3. **Liftoff**: Feuer an allen sechs Düsen, Rauchwolken aus dem Flammenkanal, Kamerawackeln, Rauchsäule am Himmel, Rollmanöver. Die Kamera folgt nach oben, der Himmel wird mit der Höhe dunkler, Sterne und Erdkrümmung erscheinen.
-4. **Übergang (ca. 3 s, ohne Schnitt)**: Die Rakete neigt sich in die Horizontale, die Booster werden abgesprengt und trudeln davon, die Kamera schwenkt auf einem Bogen hinter die Rakete, das HUD blendet ein.
-5. **Gameplay**: Die Rakete fliegt automatisch vorwärts. Asteroiden kommen von vorne, mit der Zeit werden es mehr, sie werden größer und schneller, ein Teil zielt auf die Rakete. Der Score ist die geflogene Distanz in km. Die Erde bleibt zurück, der Mond liegt voraus.
-6. **Power-up**: Seltene, leuchtende Kristalle geben **5 s Schild**. Mit Schild zerschellen Asteroiden bei Kontakt, in der letzten Sekunde blinken Schild und HUD-Balken.
-7. **Game Over**: Explosion, danach Score und Rekord. **Nochmal** startet direkt das Gameplay (die Rakete fliegt von hinten ins Bild), **Zurück zum Start** zeigt die komplette Startanimation erneut.
+## How it plays
 
-## Steuerung
+1. **Title screen**: the camera circles the rocket on the pad. Click **Start** (or press `Space` / `Enter`).
+2. **Countdown 10 → 0**: the camera moves around the pad and stops where no tower blocks the view. The main engines start at T–3.5, the boosters ignite at T–0. **Skip** runs the launch at 6× speed.
+3. **Liftoff**: flames from all six nozzles, exhaust clouds from the flame trench, camera shake, a smoke column and a roll program. The sky darkens with altitude until stars and the curve of the Earth appear.
+4. **Transition (about 3 s, no cut)**: the rocket pitches over, the boosters separate and tumble away, the camera swings behind the rocket and the HUD fades in.
+5. **Gameplay**: the rocket flies forward on its own. Asteroids come at you; over time there are more of them, they get bigger and faster, and some aim at you. Your score is the distance flown in km. The Earth falls behind, the Moon is ahead.
+6. **Power-up**: rare glowing crystals give you a **5 second shield**. Asteroids that touch the shield are destroyed. Shield and HUD bar blink during the last second.
+7. **Game over**: explosion, then your score and best score. **Try again** goes straight back into gameplay, **Back to start** plays the full launch again.
 
-| Aktion | Desktop | Mobile |
+## Controls
+
+| Action | Desktop | Mobile |
 |---|---|---|
-| Lenken | `WASD` / Pfeiltasten | Ziehen/Wischen (schwebender Joystick) |
-| Start | Button, `Leertaste`, `Enter` | Button |
-| Nochmal | Button, `R`, `Leertaste` | Button |
-| Zurück zum Start | Button, `L`, `Esc` | Button |
-| Ton an/aus | `M`, 🔊-Button | 🔊-Button |
+| Steer | `WASD` / arrow keys | Drag anywhere (floating joystick) |
+| Start | Button, `Space`, `Enter` | Button |
+| Try again | Button, `R`, `Space` | Button |
+| Back to start | Button, `L`, `Esc` | Button |
+| Sound on/off | `M`, button | Button |
 
-## Projekt starten
+## Running it
 
 ```bash
 npm install
 npm run dev
 ```
 
-Produktions-Build: `npm run build` und danach `npm run preview`. Der Ordner `dist/` ist komplett statisch und funktioniert auch aus einem Unterordner.
+Production build: `npm run build`, then `npm run preview`. The `dist/` folder is fully static and also works from a sub-path.
 
-## Module (`src/`)
+After `npm install` you can also open `index.html` with a plain static server such as VS Code's Live Server. An import map in `index.html` points `three` at `node_modules/`, so no build step is needed for that.
 
-| Datei | Aufgabe |
+Pushes to `main` are built and deployed to GitHub Pages by `.github/workflows/deploy.yml`.
+
+## Modules (`src/`)
+
+| File | Purpose |
 |---|---|
-| `main.js` | Renderer, Licht, Laden des Modells, State Machine, Hauptschleife, adaptive Qualität |
-| `config.js` | Alle Einstellwerte (Timing, Kamera, Schwierigkeit, Partikel, Power-ups) und kleine Mathe-Helfer |
-| `rocketModel.js` | Teilt das GLB in Startgelände, Core-Stufe, zwei Booster und sechs Düsen auf |
-| `environment.js` | Himmelsverlauf, prozedurale Erde mit Atmosphäre (GLSL), Mond, Sternenfeld, Speed-Streaks |
-| `launch.js` | Titel-Orbit, Countdown, Zündung, Aufstieg, Kamerafahrt |
-| `transition.js` | Pitch-Over, Booster-Trennung, Kameraschwenk ins Gameplay |
-| `exhaust.js` | Triebwerksflammen (Shader-Kegel, Mach-Diamanten) sowie Feuer, Rauch und Dampf |
-| `game.js` | Gameplay: Steuerung, Kollision, Schild, Score/Rekord, Chase-Kamera, Explosion |
-| `asteroids.js` | Prozedurale Asteroiden (verformte Icosaeder mit Kratern), InstancedMesh-Pool |
-| `powerups.js` | Power-up-Kristalle |
-| `particles.js` | Instanziertes Billboard-Partikelsystem (Feuer, Rauch, Funken) |
-| `input.js` | Tastatur- und Touch-Steuerung |
-| `hud.js` / `style.css` | HUD, Overlays, Buttons |
-| `audio.js` | Synthetisierte Sounds (Web Audio, keine Audiodateien) |
+| `main.js` | Renderer, lights, model loading, state machine, main loop, adaptive quality |
+| `config.js` | All tuning values (timing, camera, difficulty, particles, power-ups) and small math helpers |
+| `rocketModel.js` | Splits the GLB into launch site, core stage, two boosters and six nozzles |
+| `environment.js` | Sky gradient, procedural Earth with atmosphere (GLSL), Moon, star field, speed streaks |
+| `launch.js` | Title orbit, countdown, ignition, ascent, camera moves |
+| `transition.js` | Pitch-over, booster separation, camera swing into gameplay |
+| `exhaust.js` | Engine plumes (shader cones with shock diamonds) plus fire, smoke and steam |
+| `game.js` | Gameplay: steering, collisions, shield, score/best score, chase camera, explosion |
+| `asteroids.js` | Procedural asteroids (displaced icospheres with craters), instanced pool |
+| `powerups.js` | Power-up crystals |
+| `particles.js` | Instanced billboard particle system (fire, smoke, sparks) |
+| `input.js` | Keyboard and touch input |
+| `hud.js` / `style.css` | HUD, overlays, buttons |
+| `audio.js` | Synthesized sound (Web Audio, no audio files) |
 
-## Hinweise
+## Notes
 
-- Als einziges Asset wird das eigene Modell `assets/Nasa_Rakete_small.glb` genutzt. Asteroiden, Power-ups, Erde, Mond, Sterne, Partikel und Sounds werden im Code erzeugt. Zur Laufzeit wird nichts aus dem Internet geladen.
-- Booster sind im Modell ein gemeinsames Objekt (`Circle.001`). Sie werden beim Laden nach Seite getrennt, damit sie einzeln abgesprengt werden können. Die sechs Düsen werden aus dem Startturm-Objekt (`Circle.008`) herausgelöst.
-- Im Export schwebt die Rakete ca. 200 Einheiten über dem Starttisch. Sie wird beim Laden auf das Deck abgesenkt (`CONFIG.model.deckY`).
-- Der Rekord liegt in `localStorage` unter dem Schlüssel `artemis2-best-km`.
-- Auf Touch-Geräten: Pixel-Ratio höchstens 1,5, kein Bloom, keine Schatten, weniger Partikel. Fällt die Bildrate unter ~45 FPS, senkt das Spiel automatisch die Auflösung und schaltet danach Bloom ab.
-- Testmodus: `?test` an die URL hängen, dann steht `window.__t` zum Vorspulen und für automatische Tests bereit.
+- The only asset is the Blender model `assets/Nasa_Rakete_small.glb`. Asteroids, power-ups, Earth, Moon, stars, particles and sounds are generated in code. Nothing is loaded from the internet at runtime.
+- Both boosters are a single object in the model (`Circle.001`). They are split by side on load so they can separate individually. The six nozzles are cut out of the launch tower object (`Circle.008`).
+- In the export the rocket floats about 200 units above the launch platform; it is lowered onto the deck on load (`CONFIG.model.deckY`).
+- The best score is stored in `localStorage` under `artemis2-best-km`.
+- On touch devices: pixel ratio capped at 1.5, no bloom, no shadows, fewer particles. If the frame rate drops below ~45 fps the game lowers the resolution, then turns bloom off.
+- Test mode: add `?test` to the URL to get `window.__t` for fast-forwarding and automated tests.
