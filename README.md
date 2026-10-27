@@ -1,10 +1,10 @@
-# Artemis II game
+# Artemis 2 Game
 
 A browser game where you launch NASA's Artemis II rocket from the pad and then steer it through an asteroid field on the way to the Moon.
 
 ![The SLS core stage flying over the Earth through an asteroid field, with the Moon ahead](docs/gameplay.jpg)
 
-### **[▶ Play it in your browser](https://javinwittig.github.io/Artemis-2-game/)**
+### **[â–¶ Play it in your browser](https://javinwittig.github.io/Artemis-2-game/)**
 
 ## Quick start
 
@@ -15,7 +15,7 @@ Open **https://javinwittig.github.io/Artemis-2-game/** and press **Start**. It r
 
 ## Features
 
-- **A full launch sequence.** Countdown from 10 while the camera circles the pad, main engine start at T–3.5, booster ignition and liftoff at T–0, then a roll program as the sky fades to black. `Skip` fast-forwards it.
+- **A full launch sequence.** Countdown from 10 while the camera circles the pad, main engine start at Tâ€“3.5, booster ignition and liftoff at Tâ€“0, then a roll program as the sky fades to black. `Skip` fast-forwards it.
 - **No cut between the cinematic and the game.** The rocket pitches over, the two boosters separate and tumble away, and the camera swings behind the rocket on one continuous arc.
 - **Asteroids that get harder over time.** Every rock has a random shape, size and spin. More of them spawn as you fly, they get faster, and some aim straight at you. One hit ends the run.
 - **Shield power-up.** Rare crystals give 5 seconds of shield. Asteroids that touch it shatter, and the shield blinks during its last second.
@@ -55,7 +55,7 @@ Then open the URL Vite prints (usually http://localhost:5173).
 
 **The rocket model is split up at load time.** The game uses a single Blender export (`assets/Nasa_Rakete_small.glb`), and it wasn't built for animation. Both boosters are one mesh. The six engine nozzles belong to the launch tower mesh, not the rocket, and the whole stack floats about 200 units above the pad. `rocketModel.js` sorts triangles by their world-space position: nozzles are cut out of the tower, the booster mesh is split by side, and the stack is lowered onto the deck. The export uses quantized vertex attributes, so the parts aren't copied into new vertex buffers. Each part keeps the original buffers and only gets its own index list, which keeps the UVs and normals exactly as they were.
 
-**One continuous camera.** Every phase (title orbit, countdown, ascent, pitch-over, chase) writes the same camera target, and each phase starts from the pose the previous one ended on. During the pitch-over, the camera offset relative to the rocket is spherically interpolated from "side and below" to "behind and above", so it swings around the rocket instead of passing through it. Automated tests measured at most 0.42° of camera rotation per frame across the whole hand-off.
+**One continuous camera.** Every phase (title orbit, countdown, ascent, pitch-over, chase) writes the same camera target, and each phase starts from the pose the previous one ended on. During the pitch-over, the camera offset relative to the rocket is spherically interpolated from "side and below" to "behind and above", so it swings around the rocket instead of passing through it. Automated tests measured at most 0.42Â° of camera rotation per frame across the whole hand-off.
 
 **The Earth rolls under the rocket instead of the rocket flying away.** The launch site is attached to the north pole of a procedural Earth sphere, with a radius of 250,000 units. Once the rocket flies forward, the sphere moves along with it and rotates by the same arc length. The ground therefore scrolls past realistically, and the pad stays in place on the surface without anything drifting away from the origin. The continents, clouds and atmosphere glow are all GLSL shaders. The atmosphere is computed from the ray's closest approach to the planet, so the limb looks right at any altitude.
 
