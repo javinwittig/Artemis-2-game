@@ -4,7 +4,11 @@ A browser game where you launch NASA's Artemis II rocket from the pad and then s
 
 ![The SLS core stage flying over the Earth through an asteroid field, with the Moon ahead](docs/gameplay.jpg)
 
+<<<<<<< HEAD
 ### **[▶ Play it in your browser](https://javinwittig.github.io/Artemis-2-game/)**
+=======
+### ** Play it in your browser](https://javinwittig.github.io/Artemis-2-game/)**
+>>>>>>> b4afaded07419bc3947647993f3acdaaa60fd43b
 
 ## Quick start
 
