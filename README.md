@@ -1,4 +1,4 @@
-# Artemis II: Launch & Dodge
+# Artemis II game
 
 A browser game where you launch NASA's Artemis II rocket from the pad and then steer it through an asteroid field on the way to the Moon.
 
