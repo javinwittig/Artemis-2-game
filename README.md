@@ -1,66 +1,72 @@
-# Artemis II — Launch & Dodge
+# Artemis II: Launch & Dodge
 
-A 3D browser game built with Three.js and Vite: launch the Artemis II rocket (SLS + Orion) from its pad, follow it into space without a cut, then dodge asteroids in a third-person view.
+A browser game where you launch NASA's Artemis II rocket from the pad and then steer it through an asteroid field on the way to the Moon.
 
-Play it at https://javinwittig.github.io/Artemis-2-game/
+![The SLS core stage flying over the Earth through an asteroid field, with the Moon ahead](docs/gameplay.jpg)
 
-## How it plays
+### **[▶ Play it in your browser](https://javinwittig.github.io/Artemis-2-game/)**
 
-1. **Title screen**: the camera circles the rocket on the pad. Click **Start** (or press `Space` / `Enter`).
-2. **Countdown 10 → 0**: the camera moves around the pad and stops where no tower blocks the view. The main engines start at T–3.5, the boosters ignite at T–0. **Skip** runs the launch at 6× speed.
-3. **Liftoff**: flames from all six nozzles, exhaust clouds from the flame trench, camera shake, a smoke column and a roll program. The sky darkens with altitude until stars and the curve of the Earth appear.
-4. **Transition (about 3 s, no cut)**: the rocket pitches over, the boosters separate and tumble away, the camera swings behind the rocket and the HUD fades in.
-5. **Gameplay**: the rocket flies forward on its own. Asteroids come at you; over time there are more of them, they get bigger and faster, and some aim at you. Your score is the distance flown in km. The Earth falls behind, the Moon is ahead.
-6. **Power-up**: rare glowing crystals give you a **5 second shield**. Asteroids that touch the shield are destroyed. Shield and HUD bar blink during the last second.
-7. **Game over**: explosion, then your score and best score. **Try again** goes straight back into gameplay, **Back to start** plays the full launch again.
+## Quick start
 
-## Controls
+Open **https://javinwittig.github.io/Artemis-2-game/** and press **Start**. It runs on desktop and mobile. The first load fetches a 17 MB model, so give it a few seconds.
 
-| Action | Desktop | Mobile |
+- **Desktop:** steer with `WASD` or the arrow keys
+- **Mobile:** drag anywhere on the screen
+
+## Features
+
+- **A full launch sequence.** Countdown from 10 while the camera circles the pad, main engine start at T–3.5, booster ignition and liftoff at T–0, then a roll program as the sky fades to black. `Skip` fast-forwards it.
+- **No cut between the cinematic and the game.** The rocket pitches over, the two boosters separate and tumble away, and the camera swings behind the rocket on one continuous arc.
+- **Asteroids that get harder over time.** Every rock has a random shape, size and spin. More of them spawn as you fly, they get faster, and some aim straight at you. One hit ends the run.
+- **Shield power-up.** Rare crystals give 5 seconds of shield. Asteroids that touch it shatter, and the shield blinks during its last second.
+- **Score and best score.** Distance flown in km. Your best run is saved in the browser.
+- **Instant restart.** `Try again` goes straight back into the asteroid field, and `Back to start` replays the full launch.
+
+| Liftoff | Booster separation | Shield |
 |---|---|---|
-| Steer | `WASD` / arrow keys | Drag anywhere (floating joystick) |
-| Start | Button, `Space`, `Enter` | Button |
-| Try again | Button, `R`, `Space` | Button |
-| Back to start | Button, `L`, `Esc` | Button |
-| Sound on/off | `M`, button | Button |
+| ![Liftoff with exhaust clouds rolling across the pad](docs/liftoff.jpg) | ![The two boosters falling away above the Earth's horizon](docs/separation.jpg) | ![The shield bubble breaking an asteroid](docs/shield.jpg) |
 
-## Running it
+## Run it locally
+
+Requires **Node.js 18 or newer** (tested with Node 24) and npm. There are no other dependencies and no environment variables.
 
 ```bash
+git clone https://github.com/javinwittig/Artemis-2-game.git
+cd Artemis-2-game
 npm install
 npm run dev
 ```
 
-Production build: `npm run build`, then `npm run preview`. The `dist/` folder is fully static and also works from a sub-path.
+Then open the URL Vite prints (usually http://localhost:5173).
 
-After `npm install` you can also open `index.html` with a plain static server such as VS Code's Live Server. An import map in `index.html` points `three` at `node_modules/`, so no build step is needed for that.
+- **Production build:** `npm run build` writes a static site to `dist/`, and `npm run preview` serves it.
+- **Without Vite:** after `npm install`, you can also open `index.html` with any static server, for example VS Code's Live Server. An import map in `index.html` resolves `three` from `node_modules/`.
+- **Deployment:** every push to `main` is built and published to GitHub Pages by `.github/workflows/deploy.yml`.
 
-Pushes to `main` are built and deployed to GitHub Pages by `.github/workflows/deploy.yml`.
-
-## Modules (`src/`)
-
-| File | Purpose |
+| Key | Action |
 |---|---|
-| `main.js` | Renderer, lights, model loading, state machine, main loop, adaptive quality |
-| `config.js` | All tuning values (timing, camera, difficulty, particles, power-ups) and small math helpers |
-| `rocketModel.js` | Splits the GLB into launch site, core stage, two boosters and six nozzles |
-| `environment.js` | Sky gradient, procedural Earth with atmosphere (GLSL), Moon, star field, speed streaks |
-| `launch.js` | Title orbit, countdown, ignition, ascent, camera moves |
-| `transition.js` | Pitch-over, booster separation, camera swing into gameplay |
-| `exhaust.js` | Engine plumes (shader cones with shock diamonds) plus fire, smoke and steam |
-| `game.js` | Gameplay: steering, collisions, shield, score/best score, chase camera, explosion |
-| `asteroids.js` | Procedural asteroids (displaced icospheres with craters), instanced pool |
-| `powerups.js` | Power-up crystals |
-| `particles.js` | Instanced billboard particle system (fire, smoke, sparks) |
-| `input.js` | Keyboard and touch input |
-| `hud.js` / `style.css` | HUD, overlays, buttons |
-| `audio.js` | Synthesized sound (Web Audio, no audio files) |
+| `WASD` / arrow keys | Steer |
+| `Space` / `Enter` | Start, or try again after a crash |
+| `R` | Try again |
+| `L` / `Esc` | Back to the launch pad |
+| `M` | Sound on/off |
 
-## Notes
+## How it works
 
-- The only asset is the Blender model `assets/Nasa_Rakete_small.glb`. Asteroids, power-ups, Earth, Moon, stars, particles and sounds are generated in code. Nothing is loaded from the internet at runtime.
-- Both boosters are a single object in the model (`Circle.001`). They are split by side on load so they can separate individually. The six nozzles are cut out of the launch tower object (`Circle.008`).
-- In the export the rocket floats about 200 units above the launch platform; it is lowered onto the deck on load (`CONFIG.model.deckY`).
-- The best score is stored in `localStorage` under `artemis2-best-km`.
-- On touch devices: pixel ratio capped at 1.5, no bloom, no shadows, fewer particles. If the frame rate drops below ~45 fps the game lowers the resolution, then turns bloom off.
-- Test mode: add `?test` to the URL to get `window.__t` for fast-forwarding and automated tests.
+**The rocket model is split up at load time.** The game uses a single Blender export (`assets/Nasa_Rakete_small.glb`), and it wasn't built for animation. Both boosters are one mesh. The six engine nozzles belong to the launch tower mesh, not the rocket, and the whole stack floats about 200 units above the pad. `rocketModel.js` sorts triangles by their world-space position: nozzles are cut out of the tower, the booster mesh is split by side, and the stack is lowered onto the deck. The export uses quantized vertex attributes, so the parts aren't copied into new vertex buffers. Each part keeps the original buffers and only gets its own index list, which keeps the UVs and normals exactly as they were.
+
+**One continuous camera.** Every phase (title orbit, countdown, ascent, pitch-over, chase) writes the same camera target, and each phase starts from the pose the previous one ended on. During the pitch-over, the camera offset relative to the rocket is spherically interpolated from "side and below" to "behind and above", so it swings around the rocket instead of passing through it. Automated tests measured at most 0.42° of camera rotation per frame across the whole hand-off.
+
+**The Earth rolls under the rocket instead of the rocket flying away.** The launch site is attached to the north pole of a procedural Earth sphere, with a radius of 250,000 units. Once the rocket flies forward, the sphere moves along with it and rotates by the same arc length. The ground therefore scrolls past realistically, and the pad stays in place on the surface without anything drifting away from the origin. The continents, clouds and atmosphere glow are all GLSL shaders. The atmosphere is computed from the ray's closest approach to the planet, so the limb looks right at any altitude.
+
+**Built to stay at 60 fps.** All particles (fire, smoke, steam, sparks) are camera-facing quads in three instanced draw calls, simulated on the CPU. Asteroids are six procedurally generated rock shapes, each drawn as one `InstancedMesh`. Collisions use a capsule along the rocket body (and an ellipsoid while the shield is up) instead of mesh tests. Every shader, including hidden effects, is compiled before the title screen, so nothing stutters on first use. Phones get a lower pixel ratio, no bloom, no shadows and fewer particles. If any device drops below ~45 fps, the game lowers the resolution and then turns bloom off.
+
+Everything except the rocket model is generated in code: asteroids, power-ups, Earth, Moon, stars, particles and all sounds (Web Audio synthesis). Nothing is downloaded at runtime.
+
+## Credits
+
+- Rocket and launch pad model: my own Blender model of the Artemis II SLS and Orion.
+- [three.js](https://threejs.org/) for rendering, glTF loading with meshopt decoding, and the bloom post-processing.
+- [Vite](https://vite.dev/) for the dev server and build.
+- The value-noise hash in the shaders follows [Inigo Quilez's](https://iquilezles.org/) widely used formulation.
+- Inspired by NASA's [Artemis II mission](https://www.nasa.gov/mission/artemis-ii/). This is a fan project and is not affiliated with NASA.
