@@ -38,8 +38,6 @@ Then open the URL Vite prints (usually http://localhost:5173).
 
 
 
-
-
 ## How it works
 
 **I cut my rocket model apart when the game loads.** I modeled the rocket and launch pad in Blender. The two boosters were one object, the engine nozzles were part of the launch tower, and the rocket was hovering above the pad. Instead of rebuilding the model, the game sorts its pieces by position when it loads: it pulls the nozzles off the tower, splits the boosters into a left and a right one, and sets the rocket down on the pad. That's how the boosters can fall away during the flight, I was a bit messy in my Blender scene.
