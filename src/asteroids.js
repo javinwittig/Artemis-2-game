@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { CONFIG, QUALITY, rand } from './config.js';
 import { randomDir } from './particles.js';
 
-// --- small value noise for the rock shapes (CPU side) ---
 function hash(x, y, z) {
   const h = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453;
   return h - Math.floor(h);
@@ -28,7 +27,6 @@ function fbm3(x, y, z) {
   return s / 0.9375;
 }
 
-// A lumpy, cratered rock: displaced icosphere with darker crater floors.
 function makeRockGeometry(detail) {
   const geo = new THREE.IcosahedronGeometry(1, detail);
   const pos = geo.attributes.position;
@@ -62,7 +60,7 @@ function makeRockGeometry(detail) {
     colors[i * 3 + 2] = g * 0.88;
   }
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  geo.computeVertexNormals(); // non-indexed: faceted, rocky look
+  geo.computeVertexNormals();
   geo.computeBoundingSphere();
   return geo;
 }
@@ -90,10 +88,6 @@ export class AsteroidField {
     this.list = [];
   }
 
-  /**
-   * centre: lane centre (anchor), target: rocket position, dist: spawn distance ahead,
-   * difficulty: 0..1
-   */
   spawn(centre, target, dist, difficulty) {
     const A = CONFIG.asteroids;
     const free = this.variants.filter((v) => v.items.length < A.perVariant);
@@ -147,7 +141,6 @@ export class AsteroidField {
     this.list.length = 0;
   }
 
-  // Moves everything and drops rocks that are behind the camera.
   update(dt, cameraZ) {
     for (let i = this.list.length - 1; i >= 0; i--) {
       const a = this.list[i];
@@ -162,7 +155,6 @@ export class AsteroidField {
     }
   }
 
-  // Shield impact: the rock bursts into dust and glowing debris.
   shatter(a, rocketVel) {
     const { smoke, sparks, fire } = this.ctx.particles;
     const p = a.pos;

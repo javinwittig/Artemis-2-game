@@ -7,8 +7,6 @@ const _qa = new THREE.Quaternion();
 const _qb = new THREE.Quaternion();
 const _dir = new THREE.Vector3();
 
-// Slerp between two offset vectors: the camera swings around the rocket on an arc
-// instead of cutting through it.
 function slerpVectors(a, b, t, out) {
   const la = a.length();
   const lb = b.length();
@@ -23,13 +21,10 @@ function slerpVectors(a, b, t, out) {
     .multiplyScalar(lerp(la, lb, t));
 }
 
-// Rocket attitude for a given pitch-over angle: rolled 90° (boosters left/right),
-// then pitched from straight up (+Y) towards the flight direction (-Z).
 export function flightAttitude(theta, out) {
   return out.copy(_qa.setFromAxisAngle(X, -theta)).multiply(_qb.setFromAxisAngle(Y, Math.PI / 2));
 }
 
-// Seamless hand-off from the ascent to the gameplay chase camera.
 export class Transition {
   constructor(ctx) {
     this.ctx = ctx;
@@ -58,14 +53,12 @@ export class Transition {
     return clamp01(this.t / CONFIG.transition.duration);
   }
 
-  // Returns true when the rocket is in the gameplay pose.
   update(dt) {
     const { rocket, exhaust, camRig, hud, scene, fx } = this.ctx;
     const C = CONFIG.transition;
     this.t += dt;
     const u = this.progress;
 
-    // pitch over while easing from launch speed to cruise speed
     const theta = (Math.PI / 2) * smootherstep(u / 0.85);
     const speed = lerp(this.v0, CONFIG.game.speedStart, smoothstep(0, 1, u));
     _dir.set(0, Math.cos(theta), -Math.sin(theta));
@@ -87,7 +80,6 @@ export class Transition {
       this.ctx.sound.asteroidHit();
     }
 
-    // camera: swing from the side/below view to behind and above the rocket
     const e = smootherstep(u);
     slerpVectors(this.camOffset0, this.camOffsetEnd, e, this.offset);
     camRig.pos.copy(rocket.rig.position).add(this.offset);

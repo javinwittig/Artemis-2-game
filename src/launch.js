@@ -5,8 +5,6 @@ const UP = new THREE.Vector3(0, 1, 0);
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const TAU = Math.PI * 2;
 
-// Orbit roughly half way around the pad (continuing the title orbit direction)
-// and stop where no tower blocks the view of the rocket.
 function pickSweep(fromAngle) {
   let best = Math.PI;
   let bestMargin = -Infinity;
@@ -23,7 +21,6 @@ function pickSweep(fromAngle) {
   return best;
 }
 
-// Title-screen orbit, countdown, ignition and the vertical ascent.
 export class Launch {
   constructor(ctx) {
     this.ctx = ctx;
@@ -58,15 +55,13 @@ export class Launch {
     this.sweep = -pickSweep(this.titleAngle);
   }
 
-  // Returns true once the ascent is finished.
   update(dt) {
     const L = CONFIG.launch;
     const { rocket, exhaust, hud, sound, camRig, fx } = this.ctx;
     const pad = rocket.padPivot;
     this.t += dt;
-    const T = this.t - L.countdown; // < 0 countdown, >= 0 after T-0
+    const T = this.t - L.countdown;
 
-    // --- countdown display ---
     if (T < 0) {
       const n = Math.ceil(-T);
       if (n !== this.lastCount) {
@@ -81,7 +76,6 @@ export class Launch {
       hud.setCountdown(null);
     }
 
-    // --- events ---
     if (T >= -L.mainEngineStart && !this.flags.rs25) {
       this.flags.rs25 = true;
       exhaust.ignite('rs25', 1.6);
@@ -95,7 +89,6 @@ export class Launch {
       hud.flash(0.35);
     }
 
-    // --- flight: speed grows with t², so the first metres look heavy ---
     const ta = Math.max(0, T - L.holdDown);
     const k = (3 * L.ascentAltitude) / L.ascentDuration ** 3;
     const alt = (k * ta ** 3) / 3;
@@ -113,7 +106,6 @@ export class Launch {
     exhaust.atmosphere = 1;
     exhaust.vacuum = smoothstep(CONFIG.sky.spaceFrom, CONFIG.sky.spaceTo, alt) * 0.6;
 
-    // --- camera ---
     const c = CONFIG.launch.liftoffCam;
     if (T < 0) {
       const e = easeInOutCubic(Math.min(1, this.t / L.countdown));
@@ -135,7 +127,6 @@ export class Launch {
       camRig.look.copy(rocket.rig.position).y += 60;
     }
 
-    // --- shake: engines on the pad, strongest right at liftoff ---
     const srb = exhaust.throttle.srb;
     fx.shake = exhaust.throttle.rs25 * 0.12 + srb * (0.15 + 0.85 * (1 - smoothstep(0, 6, ta)));
 

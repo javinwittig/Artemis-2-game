@@ -24,7 +24,6 @@ hud.setMuted(sound.muted);
 const input = new Input(stage, document.getElementById('joystick'), document.getElementById('joystick-knob'));
 const TEST = new URLSearchParams(location.search).has('test');
 
-// ---------- renderer ----------
 let pixelRatio = Math.min(window.devicePixelRatio || 1, QUALITY.maxPixelRatio);
 const renderer = new THREE.WebGLRenderer({ antialias: QUALITY.antialias, powerPreference: 'high-performance', preserveDrawingBuffer: TEST });
 renderer.setPixelRatio(pixelRatio);
@@ -52,13 +51,11 @@ if (QUALITY.bloom) {
   composer.addPass(new OutputPass());
 }
 
-// ---------- lights ----------
 const hemi = new THREE.HemisphereLight(0xcfe2ff, 0x6f5d48, 0.9);
 scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xfff1de, 2.6);
 scene.add(sun, sun.target);
 
-// ---------- shared context ----------
 const ctx = {
   scene,
   camera,
@@ -115,7 +112,6 @@ async function init() {
 
   launch.updateTitle(0);
   applyCamera(0);
-  // compile every shader up front (hidden effects included) so nothing stutters mid-flight
   const hidden = [];
   scene.traverse((o) => {
     if (!o.visible) {
@@ -131,7 +127,6 @@ async function init() {
   renderer.setAnimationLoop(loop);
 }
 
-// ---------- state changes ----------
 function bestKm() {
   try {
     return parseInt(localStorage.getItem(CONFIG.storage.best) || '0', 10) || 0;
@@ -219,7 +214,6 @@ input.onKey = (code) => {
   if (code === 'KeyL' || code === 'Escape') goHome();
 };
 
-// ---------- frame ----------
 let time = 0;
 
 function update(dtReal) {
@@ -245,7 +239,6 @@ function update(dtReal) {
   for (const p of Object.values(ctx.particles)) p.update(simDt);
   hud.update(dt);
 
-  // sky and earth follow altitude; after the pitch-over we are in space for good
   const alt = rocket.altitude;
   let spaceT = smoothstep(CONFIG.sky.spaceFrom, CONFIG.sky.spaceTo, alt);
   if (state === 'transition') spaceT = Math.max(spaceT, transition.progress);
@@ -290,11 +283,10 @@ function render() {
   else renderer.render(scene, camera);
 }
 
-// If the device can't hold ~45 fps, trade resolution (then bloom) for frame rate.
 let perfTime = 0;
 let perfFrames = 0;
 function adaptQuality(dt) {
-  if (state === 'title' || dt > 0.25) return; // ignore tab switches
+  if (state === 'title' || dt > 0.25) return;
   perfTime += dt;
   perfFrames++;
   if (perfTime < 2) return;
@@ -322,7 +314,6 @@ function loop(now) {
   adaptQuality(dt);
 }
 
-// ---------- resize / visibility ----------
 function resize() {
   const w = window.innerWidth;
   const h = window.innerHeight;
@@ -353,7 +344,6 @@ if (TEST) {
     retry,
     goHome,
     setInput(x, y) { input.override = x === null ? null : { x, y }; },
-    // drops a rock straight into the rocket's path (dx/dy relative to the rocket)
     spawnRock(dist, dx = 0, dy = 0, r = 80) {
       const p = ctx.rocket.rig.position;
       game.asteroids.spawn(game.anchor, p, dist, 0);

@@ -1,12 +1,9 @@
 import * as THREE from 'three';
 
-// Camera-facing quads, one instance per particle. Simulation runs on the CPU,
-// the GPU only expands the quads, so a few thousand particles stay cheap.
-
-const VERT = /* glsl */ `
+const VERT = `
 attribute vec3 iPos;
 attribute vec4 iCol;
-attribute vec2 iSR; // size, rotation
+attribute vec2 iSR;
 varying vec2 vUv;
 varying vec4 vCol;
 varying float vFogDepth;
@@ -20,7 +17,7 @@ void main() {
   gl_Position = projectionMatrix * mv;
 }`;
 
-const FRAG = /* glsl */ `
+const FRAG = `
 uniform sampler2D map;
 uniform vec3 fogColor;
 uniform float fogNear;
@@ -54,7 +51,6 @@ export function makeSpriteTexture(kind) {
     g.fillRect(0, 0, s, s);
   };
   if (kind === 'smoke') {
-    // overlapping soft blobs give a lumpy, cauliflower-like puff
     for (let i = 0; i < 24; i++) {
       const r = s * (0.12 + Math.random() * 0.18);
       const ang = Math.random() * Math.PI * 2;
@@ -134,10 +130,6 @@ export class ParticleSystem {
     this.cursor = 0;
   }
 
-  /**
-   * o: { x, y, z, vx, vy, vz, life, size, sizeEnd, color: [r,g,b], colorEnd, alpha,
-   *      drag, gravity, spin, fadeIn } — colors may exceed 1 for bloom.
-   */
   emit(o) {
     const i = this.cursor;
     this.cursor = (i + 1) % this.max;
@@ -213,7 +205,6 @@ export class ParticleSystem {
   }
 }
 
-// Random unit vector helper shared by the effect code.
 export function randomDir(out) {
   const u = Math.random() * 2 - 1;
   const a = Math.random() * Math.PI * 2;

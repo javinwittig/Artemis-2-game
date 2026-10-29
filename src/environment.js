@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, lerp, smoothstep, rand } from './config.js';
 
-export const NOISE_GLSL = /* glsl */ `
+export const NOISE_GLSL = `
 float hash3(vec3 p) {
   p = fract(p * 0.3183099 + 0.1);
   p *= 17.0;
@@ -23,20 +23,19 @@ float fbm(vec3 p) {
   return s / 0.96875;
 }`;
 
-// Sky colors in linear space, shared by sky dome, earth haze and fog.
 const HORIZON_DAY = new THREE.Color().setRGB(0.52, 0.68, 0.88);
 const SPACE_HAZE = new THREE.Color().setRGB(0.18, 0.32, 0.6);
 const BLACK = new THREE.Color(0, 0, 0);
 
-const SKY_VERT = /* glsl */ `
+const SKY_VERT = `
 varying vec3 vDir;
 void main() {
   vDir = position;
   vec4 p = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  gl_Position = p.xyww; // always on the far plane
+  gl_Position = p.xyww;
 }`;
 
-const SKY_FRAG = /* glsl */ `
+const SKY_FRAG = `
 uniform vec3 uSunDir;
 uniform vec3 uHorizon;
 uniform float uSpace;
@@ -48,7 +47,6 @@ void main() {
   vec3 day = mix(uHorizon, zenith, pow(clamp(h, 0.0, 1.0), 0.45));
   float s = max(dot(d, uSunDir), 0.0);
   day += vec3(1.0, 0.85, 0.6) * pow(s, 10.0) * 0.25;
-  // the zenith goes dark first, the horizon band last
   float f = clamp(uSpace * (1.0 + 0.7 * h), 0.0, 1.0);
   vec3 col = mix(day, vec3(0.0, 0.002, 0.008), f);
   col += vec3(1.0, 0.95, 0.85) * (pow(s, 900.0) * 30.0 + pow(s, 40.0) * 0.12 * uSpace);
@@ -57,7 +55,7 @@ void main() {
   #include <colorspace_fragment>
 }`;
 
-const STAR_VERT = /* glsl */ `
+const STAR_VERT = `
 attribute float aSize;
 attribute float aPhase;
 attribute vec3 aColor;
@@ -73,7 +71,7 @@ void main() {
   gl_PointSize = aSize * uPixelRatio;
 }`;
 
-const STAR_FRAG = /* glsl */ `
+const STAR_FRAG = `
 uniform float uAlpha;
 varying vec3 vColor;
 varying float vTw;
@@ -86,7 +84,7 @@ void main() {
   #include <colorspace_fragment>
 }`;
 
-const EARTH_VERT = /* glsl */ `
+const EARTH_VERT = `
 varying vec3 vLocal;
 varying vec3 vNormalW;
 varying vec3 vWorld;
@@ -98,7 +96,7 @@ void main() {
   gl_Position = projectionMatrix * viewMatrix * w;
 }`;
 
-const EARTH_FRAG = /* glsl */ `
+const EARTH_FRAG = `
 uniform vec3 uSunDir;
 uniform vec3 uHaze;
 uniform float uHazeDist;
@@ -116,7 +114,6 @@ void main() {
   float dist = length(toCam);
   vec3 V = toCam / dist;
 
-  // continents; the launch site (local +Y pole) is always on land
   float c = fbm(n * 2.4 + vec3(3.1, 1.7, 5.2));
   float site = exp(-pow(length(n.xz) / 0.03, 2.0));
   float land = smoothstep(0.5, 0.53, c + site * 0.5);
@@ -147,7 +144,7 @@ void main() {
   #include <colorspace_fragment>
 }`;
 
-const ATMO_FRAG = /* glsl */ `
+const ATMO_FRAG = `
 uniform vec3 uCenter;
 uniform vec3 uSunDir;
 uniform float uR;
@@ -168,7 +165,7 @@ void main() {
   #include <colorspace_fragment>
 }`;
 
-const MOON_FRAG = /* glsl */ `
+const MOON_FRAG = `
 uniform vec3 uSunDir;
 uniform float uAlpha;
 varying vec3 vLocal;
@@ -355,7 +352,6 @@ export class Environment {
     this.streakData[i * 3 + 2] = z;
   }
 
-  // The launch site sits on the earth's +Y pole so it rolls away with it.
   attachLaunchSite(site, padPivot) {
     this.earthBase.set(padPivot.x, CONFIG.world.groundY - this.R, padPivot.z);
     site.position.set(-padPivot.x, this.R - CONFIG.world.groundY, -padPivot.z);
@@ -363,12 +359,6 @@ export class Environment {
     this.site = site;
   }
 
-  /**
-   * o.spaceT: 0 = ground/day sky, 1 = space
-   * o.altitude: rocket altitude above the pad
-   * o.flightDz: rocket z travel since leaving the pad (negative = forward)
-   * o.earthDrop: extra distance between rocket and earth during gameplay
-   */
   update(dt, camera, o) {
     this.time += dt;
     const s = o.spaceT;
@@ -380,7 +370,6 @@ export class Environment {
     this.starUniforms.uAlpha.value = smoothstep(0.35, 0.95, s);
     this.starUniforms.uTime.value = this.time;
 
-    // the earth "rolls" under the rocket: translate with it and rotate by the same arc
     this.earthPivot.position.set(this.earthBase.x, this.earthBase.y - o.earthDrop, this.earthBase.z + o.flightDz);
     this.earthPivot.rotation.x = -o.flightDz / this.R;
     const eu = this.earthUniforms;
@@ -390,7 +379,6 @@ export class Environment {
     eu.uRim.value = smoothstep(0.4, 1, s);
     eu.uTime.value = this.time;
     this.atmoUniforms.uCenter.value.copy(this.earthPivot.position);
-    // the limb glow only works from outside the shell
     const shellDist = cam.distanceTo(this.earthPivot.position) - this.atmoUniforms.uRs.value;
     this.atmoUniforms.uAlpha.value = smoothstep(0.5, 1, s) * smoothstep(0, 3000, shellDist);
 
@@ -398,7 +386,6 @@ export class Environment {
     this.fog.near = lerp(4000, 4500, s);
     this.fog.far = lerp(40000, 12000, s);
 
-    // the Moon: always far ahead, slowly growing as the flight goes on
     const moonDist = 320000;
     const grow = 1 + Math.min(Math.abs(o.flightDz) / 2.5e6, 1.5);
     this.moon.position.copy(cam).addScaledVector(this.moonDir, moonDist);

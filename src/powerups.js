@@ -4,7 +4,6 @@ import { makeSpriteTexture, randomDir } from './particles.js';
 
 const _v = new THREE.Vector3();
 
-// Rare glowing crystals; collecting one gives the shield.
 export class PowerUps {
   constructor(ctx) {
     this.ctx = ctx;
@@ -77,7 +76,6 @@ export class PowerUps {
     }
   }
 
-  // Returns true if the rocket segment a-b touched a power-up.
   collect(a, b) {
     for (let i = 0; i < this.items.length; i++) {
       const it = this.items[i];

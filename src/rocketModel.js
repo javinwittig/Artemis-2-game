@@ -3,7 +3,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { CONFIG } from './config.js';
 
-// Works both with Vite (asset gets hashed into dist/) and with a plain static server.
 const modelUrl = new URL('../assets/Nasa_Rakete_small.glb', import.meta.url).href;
 
 const _a = new THREE.Vector3();
@@ -36,7 +35,6 @@ function requireMesh(root, name) {
   return mesh;
 }
 
-// Buckets the triangles of a mesh by a key derived from their world-space centroid.
 function splitTriangles(mesh, classify) {
   const pos = mesh.geometry.attributes.position;
   const index = mesh.geometry.index;
@@ -58,8 +56,6 @@ function splitTriangles(mesh, classify) {
   return buckets;
 }
 
-// A geometry that shares all vertex data with `geo` but draws only `indices`.
-// (The export uses quantized attributes, so the vertices are left untouched.)
 function subGeometry(geo, indices) {
   const g = new THREE.BufferGeometry();
   for (const name in geo.attributes) g.setAttribute(name, geo.attributes[name]);
@@ -76,11 +72,6 @@ function worldBoxOfIndices(mesh, indices) {
   return box;
 }
 
-/**
- * Splits the launch-site scene from the GLB into:
- *  - the launch site (pad, towers, terrain) that stays on the ground
- *  - a rocket rig: core stage + Orion and two separable boosters, each with its nozzles
- */
 export class Rocket {
   constructor(root) {
     root.updateMatrixWorld(true);
@@ -94,8 +85,6 @@ export class Rocket {
     const cx = (coreBox.min.x + coreBox.max.x) / 2;
     const cz = (coreBox.min.z + coreBox.max.z) / 2;
 
-    // 1) The nozzles are modelled as part of the launch tower: cut out every triangle
-    //    inside the rocket's footprint just below the stages.
     const hostParts = splitTriangles(host, (p) => {
       const inside = p.x > footprint.min.x && p.x < footprint.max.x && p.z > footprint.min.z && p.z < footprint.max.z
         && p.y > coreBox.min.y - 30 && p.y < coreBox.min.y + 20;
@@ -116,7 +105,6 @@ export class Rocket {
       nozzleBox.union(nozzleBoxes[k]);
     }
 
-    // 2) Lower the stack onto the launcher deck and pivot it around its middle.
     const dy = cfg.deckY - nozzleBox.min.y;
     this.length = coreBox.max.y - nozzleBox.min.y;
     this.radius = (coreBox.max.x - coreBox.min.x) / 2;
@@ -148,7 +136,6 @@ export class Rocket {
     place(core, this.core, core.matrixWorld.clone());
     place(nozzleMesh(['c00', 'c01', 'c10', 'c11']), this.core, hostMatrix);
 
-    // 3) Both boosters are one mesh: split them by side so they can separate.
     const boosterParts = splitTriangles(boosters, (p) => (p.z < cz ? 'A' : 'B'));
     const boosterMatrix = boosters.matrixWorld.clone();
     this.boosters = ['A', 'B'].map((side) => {
@@ -157,7 +144,6 @@ export class Rocket {
       this.attitude.add(group);
       place(new THREE.Mesh(subGeometry(boosters.geometry, boosterParts.get(side)), boosters.material), group, boosterMatrix);
       place(nozzleMesh([side]), group, hostMatrix);
-      // move the group origin to the booster's own centre so it tumbles naturally
       const centre = new THREE.Box3().setFromObject(group, true).getCenter(new THREE.Vector3());
       group.position.copy(centre);
       for (const child of group.children) child.position.sub(centre);
@@ -166,7 +152,6 @@ export class Rocket {
     this.boosterHome = this.boosters.map((b) => ({ position: b.position.clone(), quaternion: b.quaternion.clone() }));
     boosters.removeFromParent();
 
-    // 4) Nozzle exits (centre of the exit plane) in the space of their parent group.
     this.nozzles = nozzleKeys.map((k) => {
       const box = nozzleBoxes[k];
       const exit = new THREE.Vector3((box.min.x + box.max.x) / 2, box.min.y, (box.min.z + box.max.z) / 2)
@@ -182,14 +167,12 @@ export class Rocket {
       };
     });
 
-    // 5) Everything left over is the launch site.
     host.geometry = subGeometry(host.geometry, hostParts.get('pad'));
     const padMetal = new THREE.MeshStandardMaterial({ color: 0xd4d8dd, metalness: 0.35, roughness: 0.55 });
     root.traverse((o) => {
       if (!o.isMesh) return;
       if (!o.material || (!o.material.map && o.material.name === '')) o.material = padMetal;
       o.receiveShadow = true;
-      // the flat ground pieces never need to cast shadows
       o.castShadow = !/^(Plane|Cube011)/.test(o.name);
     });
     this.pad = root;
@@ -217,7 +200,6 @@ export class Rocket {
     this.separated = false;
   }
 
-  // Boosters keep their world transform and tumble away from the core.
   separateBoosters(velocity, scene) {
     if (this.separated) return;
     this.separated = true;

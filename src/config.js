@@ -1,6 +1,3 @@
-// All tuning values in one place. Distances are in model units
-// (the SLS stack is ~380 units tall, the HUD shows 1 unit as 10 m).
-
 export const IS_MOBILE = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 
 export const QUALITY = IS_MOBILE
@@ -9,30 +6,27 @@ export const QUALITY = IS_MOBILE
 
 export const CONFIG = {
   model: {
-    core: 'Circle',        // core stage + Orion
-    boosters: 'Circle001', // both SRBs in one mesh
-    nozzleHost: 'Circle008', // launch tower mesh that also holds the six nozzles
-    // top of the mobile launcher deck; the exported stack floats ~200 units above it
+    core: 'Circle',
+    boosters: 'Circle001',
+    nozzleHost: 'Circle008',
     deckY: 94.5,
   },
 
   world: {
     earthRadius: 250000,
-    groundY: -45, // earth surface below the launch site terrain
+    groundY: -45,
   },
 
   title: { radius: 950, height: 210, lookY: 290, speed: 0.06 },
 
   launch: {
     countdown: 10,
-    mainEngineStart: 3.5, // RS-25 start, seconds before T-0
-    holdDown: 0.3,        // SRB ignition -> first motion
+    mainEngineStart: 3.5,
+    holdDown: 0.3,
     ascentDuration: 6.5,
     ascentAltitude: 6000,
-    roll: [2.0, 4.8],     // roll program window (seconds after first motion)
+    roll: [2.0, 4.8],
     liftoffCam: { radius: 950, height: 110 },
-    // camera angles (radians around the pad) with a clear line of sight between the
-    // lightning towers and the launch tower; the countdown orbit ends inside one of them
     clearViews: [[2.65, 3.7], [4.65, 5.55], [0.5, 1.5]],
   },
 
@@ -43,7 +37,7 @@ export const CONFIG = {
   game: {
     speedStart: 1500,
     speedMax: 3200,
-    speedRamp: 150,     // seconds to reach top speed
+    speedRamp: 150,
     steerSpeed: 950,
     steerResponse: 7,
     boundsX: 560,
@@ -51,13 +45,13 @@ export const CONFIG = {
     camBack: 760,
     camUp: 230,
     lookAhead: 900,
-    camFollow: 0.75,    // how much the camera follows sideways steering
+    camFollow: 0.75,
     spawnAhead: 9000,
     kmPerUnit: 0.01,
     respawnTime: 1.1,
     graceTime: 2.0,
     deathDelay: 1.8,
-    earthRecede: 0.04,  // extra earth distance per unit flown
+    earthRecede: 0.04,
   },
 
   asteroids: {
@@ -97,7 +91,6 @@ export const smootherstep = (t) => {
 };
 export const rand = (a, b) => a + Math.random() * (b - a);
 
-// Distance from point p to the segment a-b (all THREE.Vector3).
 export function distToSegment(p, a, b) {
   const abx = b.x - a.x, aby = b.y - a.y, abz = b.z - a.z;
   const len2 = abx * abx + aby * aby + abz * abz;

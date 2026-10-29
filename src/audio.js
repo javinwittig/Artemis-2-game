@@ -1,6 +1,5 @@
 import { CONFIG } from './config.js';
 
-// Every sound is synthesized with Web Audio, there are no audio files.
 export class Sound {
   constructor() {
     this.ctx = null;
@@ -11,7 +10,6 @@ export class Sound {
     }
   }
 
-  // Must be called from a user gesture (browsers block audio before that).
   unlock() {
     if (!this.ctx) {
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -34,7 +32,6 @@ export class Sound {
     const data = this.noise.getChannelData(0);
     let last = 0;
     for (let i = 0; i < len; i++) {
-      // brown-ish noise: deep rumble instead of hiss
       last = (last + 0.04 * (Math.random() * 2 - 1)) / 1.04;
       data[i] = last * 3.5;
     }
@@ -129,7 +126,7 @@ export class Sound {
     this.muted = !this.muted;
     try {
       localStorage.setItem(CONFIG.storage.muted, this.muted ? '1' : '0');
-    } catch { /* storage unavailable */ }
+    } catch {}
     if (this.master) this.master.gain.setTargetAtTime(this.muted ? 0 : 0.8, this.ctx.currentTime, 0.05);
     return this.muted;
   }

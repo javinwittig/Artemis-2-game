@@ -30,7 +30,6 @@ html, body {
 
 .hidden { display: none !important; }
 
-/* ---------- buttons ---------- */
 .btn {
   font: 600 15px/1 var(--sans);
   letter-spacing: 0.04em;
@@ -64,7 +63,6 @@ html, body {
 }
 .text-btn:hover { color: var(--fg); }
 
-/* ---------- screens ---------- */
 .screen {
   position: absolute;
   inset: 0;
@@ -107,10 +105,8 @@ h1 {
   .only-desktop { display: none; }
 }
 
-/* text over the bright day sky needs a little contrast */
 .hint, .best, #countdown, #callout { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
 
-/* ---------- countdown & callouts ---------- */
 #countdown {
   position: absolute;
   left: 50%;
@@ -150,7 +146,6 @@ h1 {
   z-index: 35;
 }
 
-/* ---------- HUD ---------- */
 #hud {
   position: absolute;
   inset: 0;
@@ -188,7 +183,6 @@ h1 {
 .shield-bar { height: 4px; background: rgba(108, 198, 232, 0.2); }
 #shield-fill { height: 100%; width: 100%; background: var(--shield); }
 
-/* ---------- touch joystick ---------- */
 #joystick {
   position: absolute;
   width: 120px; height: 120px;
@@ -207,7 +201,6 @@ h1 {
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* ---------- game over ---------- */
 #gameover { background: rgba(5, 7, 12, 0.72); animation: fadein 0.4s ease-out; }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 .gameover-box { display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -216,7 +209,6 @@ h2 { margin: 0; font: 800 clamp(32px, 6vw, 56px)/1 var(--sans); text-transform: 
 .record { font: 12px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
 .go-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 22px; }
 
-/* ---------- flash ---------- */
 #flash {
   position: absolute;
   inset: 0;

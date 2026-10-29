@@ -42,7 +42,7 @@ export class Hud {
 
   hideTitle() {
     this.el.title.classList.add('leaving');
-    this.titleHideT = 0.6; // matches the CSS fade
+    this.titleHideT = 0.6;
   }
 
   setCountdown(n) {
@@ -54,7 +54,7 @@ export class Hud {
     const v = this.el.countdownValue;
     v.textContent = String(n);
     v.classList.remove('tick');
-    void v.offsetWidth; // restart the animation
+    void v.offsetWidth;
     v.classList.add('tick');
   }
 

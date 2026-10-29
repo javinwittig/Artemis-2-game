@@ -2,9 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, lerp, rand } from './config.js';
 import { NOISE_GLSL } from './environment.js';
 
-// Engine plumes (additive cones on every nozzle) plus fire / smoke / steam emission.
-
-const PLUME_VERT = /* glsl */ `
+const PLUME_VERT = `
 uniform float uExpand;
 varying float vAlong;
 varying float vAng;
@@ -22,7 +20,7 @@ void main() {
   gl_Position = projectionMatrix * mv;
 }`;
 
-const PLUME_FRAG = /* glsl */ `
+const PLUME_FRAG = `
 uniform vec3 uColA;
 uniform vec3 uColB;
 uniform float uIntensity;
@@ -72,9 +70,9 @@ export class Exhaust {
     this.throttle = { rs25: 0, srb: 0 };
     this.target = { rs25: 0, srb: 0 };
     this.rate = { rs25: 1, srb: 1 };
-    this.vacuum = 0;     // 0 = sea level, 1 = space
-    this.atmosphere = 1; // smoke density
-    this.velocity = new THREE.Vector3(); // rocket velocity for particle inheritance
+    this.vacuum = 0;
+    this.atmosphere = 1;
+    this.velocity = new THREE.Vector3();
     this.acc = { fire: 0, trail: 0, pad: 0 };
 
     const geo = new THREE.CylinderGeometry(1, 1, 1, 20, 14, true);
@@ -191,7 +189,6 @@ export class Exhaust {
       _d.copy(DOWN).applyQuaternion(p.holder.getWorldQuaternion(_q));
       const r = p.n.radius;
 
-      // fire sparkle inside the plume
       let n = (srb ? 70 : 30) * th * dt + Math.random();
       while (n-- >= 1) {
         const off = rand(0, srb ? 120 : 50);
@@ -205,7 +202,6 @@ export class Exhaust {
         });
       }
 
-      // exhaust trail that stays behind in the air
       if (atm > 0.02) {
         let m = (srb ? 26 : 5) * th * atm * dt + Math.random();
         while (m-- >= 1) {
@@ -222,7 +218,6 @@ export class Exhaust {
       }
     }
 
-    // billowing clouds from the flame trench while the rocket is close to the pad
     const alt = rocket.altitude;
     const padPower = Math.max(this.throttle.srb, this.throttle.rs25 * 0.45) * Math.max(0, 1 - alt / 400);
     if (padPower > 0.02) {
@@ -256,7 +251,6 @@ export class Exhaust {
     }
   }
 
-  // white water-deluge steam when the main engines start
   steamBurst() {
     const { smoke } = this.ctx.particles;
     const pad = this.ctx.rocket.padPivot;
@@ -272,7 +266,6 @@ export class Exhaust {
     }
   }
 
-  // small puffs from the separation motors
   separationPuffs() {
     const { smoke, fire } = this.ctx.particles;
     for (const b of this.ctx.rocket.boosters) {

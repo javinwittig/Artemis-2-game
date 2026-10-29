@@ -5,7 +5,7 @@ import { PowerUps } from './powerups.js';
 import { flightAttitude } from './transition.js';
 import { randomDir } from './particles.js';
 
-const SHIELD_VERT = /* glsl */ `
+const SHIELD_VERT = `
 varying vec3 vN;
 varying vec3 vV;
 varying vec3 vP;
@@ -17,7 +17,7 @@ void main() {
   gl_Position = projectionMatrix * mv;
 }`;
 
-const SHIELD_FRAG = /* glsl */ `
+const SHIELD_FRAG = `
 uniform float uTime;
 uniform float uAlpha;
 uniform float uHit;
@@ -57,7 +57,7 @@ function loadBest() {
 function saveBest(km) {
   try {
     localStorage.setItem(CONFIG.storage.best, String(km));
-  } catch { /* private mode etc. – the record just isn't kept */ }
+  } catch {}
 }
 
 export class Game {
@@ -73,7 +73,7 @@ export class Game {
     this.velocity = new THREE.Vector3();
     this.state = 'idle';
     this.best = loadBest();
-    this.flown = 0; // total distance since leaving the pad (earth recedes with it)
+    this.flown = 0;
 
     this.shieldUniforms = { uTime: ctx.timeUniform, uAlpha: { value: 0 }, uHit: { value: 0 } };
     this.shield = new THREE.Mesh(
@@ -87,7 +87,6 @@ export class Game {
         blending: THREE.AdditiveBlending,
       }),
     );
-    // an elongated bubble around the whole stack
     this.shieldR = 105;
     this.shieldL = ctx.rocket.length * 0.62;
     this.shield.scale.set(this.shieldR, this.shieldL, this.shieldR);
@@ -99,7 +98,6 @@ export class Game {
     ctx.scene.add(this.flashLight);
   }
 
-  // only distance flown while alive counts
   get km() {
     return Math.floor(this.scoreD * CONFIG.game.kmPerUnit);
   }
@@ -144,7 +142,6 @@ export class Game {
     this.state = 'playing';
   }
 
-  // Leaves the gameplay entirely (back to the launch pad).
   stop() {
     this.state = 'idle';
     this.asteroids.clear();
@@ -167,7 +164,6 @@ export class Game {
       this.scoreD += this.speed * dt;
       this.steer(dt);
     } else {
-      // after the explosion the camera coasts to a stop
       this.deathT += dt;
       this.speed *= Math.exp(-1.6 * dt);
       this.flashLight.intensity *= Math.exp(-5 * dt);
@@ -175,7 +171,6 @@ export class Game {
     this.d += this.speed * dt;
     this.flown += this.speed * dt;
 
-    // rocket pose; after a retry it flies in from behind the camera
     let fly = 0;
     if (this.respawnT > 0) {
       this.respawnT = Math.max(0, this.respawnT - dt);
@@ -271,7 +266,6 @@ export class Game {
     this.shieldT = Math.max(0, this.shieldT - dt);
     const warn = this.shieldT < P.warnTime;
     const fadeIn = clamp01((P.shieldTime - this.shieldT) / 0.25);
-    // blink during the last second as a warning
     const blink = warn ? (Math.sin(this.shieldT * Math.PI * 12) > 0 ? 1 : 0.12) : 1;
     u.uAlpha.value = fadeIn * blink;
     this.shield.visible = this.shieldT > 0;

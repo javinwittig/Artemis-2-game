@@ -8,7 +8,6 @@ const BLOCKED = new Set([...Object.values(KEYS).flat(), 'Space']);
 const STICK_RADIUS = 60;
 const DEADZONE = 0.12;
 
-// Keyboard + floating touch joystick (drag anywhere on the stage).
 export class Input {
   constructor(stage, joystick, knob) {
     this.keys = new Set();
@@ -17,7 +16,7 @@ export class Input {
     this.joystick = joystick;
     this.knob = knob;
     this.onKey = null;
-    this.override = null; // used by automated tests
+    this.override = null;
 
     window.addEventListener('keydown', (e) => {
       if (BLOCKED.has(e.code)) e.preventDefault();
@@ -58,7 +57,7 @@ export class Input {
     const mag = Math.min(1, len);
     const k = mag < DEADZONE ? 0 : (mag - DEADZONE) / (1 - DEADZONE) / (mag || 1);
     this.stick.x = dx * k;
-    this.stick.y = -dy * k; // screen up = rocket up
+    this.stick.y = -dy * k;
   }
 
   release() {
