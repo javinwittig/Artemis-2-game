@@ -1,18 +1,16 @@
 # Artemis 2 Game
 
-A browser game where you launch NASA's Artemis II rocket from the pad and then steer it through an asteroid field on the way to the Moon.
+I build a browser game where you launch NASA's Artemis II rocket from the pad and then steer it through an asteroid field on the way to the Moon.
 
 ![The SLS core stage flying over the Earth through an asteroid field, with the Moon ahead](docs/gameplay.jpg)
 
-<<<<<<< HEAD
-### **[▶ Play it in your browser](https://javinwittig.github.io/Artemis-2-game/)**
-=======
-### ** Play it in your browser](https://javinwittig.github.io/Artemis-2-game/)**
->>>>>>> b4afaded07419bc3947647993f3acdaaa60fd43b
+
+###  Play it in your browser: https://javinwittig.github.io/Artemis-2-game/
+
 
 ## Quick start
 
-Open **https://javinwittig.github.io/Artemis-2-game/** and press **Start**. It runs on desktop and mobile. The first load fetches a 17 MB model, so give it a few seconds.
+Open **https://javinwittig.github.io/Artemis-2-game/** and press **Start**. It runs on desktop and mobile. The first load needs a bit longer, so please give it a few seconds.
 
 - **Desktop:** steer with `WASD` or the arrow keys
 - **Mobile:** drag anywhere on the screen
@@ -27,7 +25,7 @@ When you die, you can instanly restart and don't need to rewatch the starting an
 
 ## Run it locally
 
-Requires **Node.js 18 or newer** (tested with Node 24) and npm. There are no other dependencies and no environment variables.
+Requires **Node.js 18 or newer** (tested with Node 24) and npm. There are no other things requirered.
 
 ```bash
 git clone https://github.com/javinwittig/Artemis-2-game.git
@@ -38,17 +36,9 @@ npm run dev
 
 Then open the URL Vite prints (usually http://localhost:5173).
 
-- **Production build:** `npm run build` writes a static site to `dist/`, and `npm run preview` serves it.
-- **Without Vite:** after `npm install`, you can also open `index.html` with any static server, for example VS Code's Live Server. An import map in `index.html` resolves `three` from `node_modules/`.
-- **Deployment:** every push to `main` is built and published to GitHub Pages by `.github/workflows/deploy.yml`.
 
-| Key | Action |
-|---|---|
-| `WASD` / arrow keys | Steer |
-| `Space` / `Enter` | Start, or try again after a crash |
-| `R` | Try again |
-| `L` / `Esc` | Back to the launch pad |
-| `M` | Sound on/off |
+
+
 
 ## How it works
 
@@ -73,4 +63,4 @@ Besides my rocket model, which I modeled in Blender was everything made in code:
 
 
 
-#I Hope you enjoyed playing my game
+# I Hope you enjoyed playing my game
