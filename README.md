@@ -64,3 +64,11 @@ Apart from my rocket model, which I made in Blender, everything was made in code
 ## some notes
 
 I completely forgot to set up Hackatime while programming my game and post devlogs, that was really dumb from me but i devloged the modeling of the 3d model of the rocket.
+
+
+
+
+
+
+
+# I hope you enjoyed playing my game
