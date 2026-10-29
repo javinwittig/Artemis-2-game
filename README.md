@@ -59,3 +59,8 @@ Apart from my rocket model, which I made in Blender, everything was made in code
 - Inspired by NASA's [Artemis II mission](https://www.nasa.gov/mission/artemis-ii/). This is a fan project and is not affiliated with NASA.
 
 # I hope you enjoyed playing my game
+
+
+## some notes
+
+I completely forgot to set up Hackatime while programming my game and post devlogs, that was really dumb from me but i devloged the modeling of the 3d model of the rocket.
