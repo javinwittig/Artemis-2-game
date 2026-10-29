@@ -58,7 +58,7 @@ Apart from my rocket model, which I made in Blender, everything was made in code
 - The value-noise hash in the shaders follows [Inigo Quilez's](https://iquilezles.org/) widely used formulation.
 - Inspired by NASA's [Artemis II mission](https://www.nasa.gov/mission/artemis-ii/). This is a fan project and is not affiliated with NASA.
 
-# I hope you enjoyed playing my game
+
 
 
 ## some notes
